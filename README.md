@@ -1,1 +1,4 @@
-# wpa-futbol
+README SOON.
+Meanwhile project explanation:
+
+The objective of this work is to create a model of Added Victory Probability (WPA) for football. To do this, methods of linear regression, machine learning, and correlation are used to determine the influence of certain variables and, in this way, eliminate the contextual variable and achieve fair comparisons between players. WPA is a very popular statistic in American sports, where its application is much easier because by nature it is easier to isolate the individual performance of players, that is, there is less influence of context. The application of this statistic in football requires adaptation to the particularities of the sport, but it can be very useful for evaluating the individual performance of players.
