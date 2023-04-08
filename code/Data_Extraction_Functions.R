@@ -316,7 +316,7 @@ extract_szn_stat_match_logs <- function(szn = NULL, stat = NULL, team_player = N
 
 # Function to extract the current season's shooting logs
 # Saved Data Path: 'rda/shooting_logs.rda'
-extract_szn_shooting_logs <- function(szn = NULL, stat = NULL, team_player = NULL){
+extract_szn_shooting_logs <- function(szn = NULL){
   # Get the start time
   start_time <- Sys.time()
   
