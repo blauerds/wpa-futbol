@@ -137,6 +137,47 @@ extract_historic_stat_match_logs <- function(stat = NULL, team_player = NULL){
 }
 
 
+# Function to extract the historic shooting logs
+# Saved Data Path: 'rda/shooting_logs.rda'
+extract_historic_shooting_logs <- function(){
+  # Get the start time
+  start_time <- Sys.time()
+  
+  # Load the historic_matches_links
+  load('rda/historic_matches_links.rda')
+  
+  shooting_logs <- c()
+  
+  # Set progress bar
+  pb <- progress_bar$new(total = length(historic_matches_links))
+  
+  # For loop to xtract the data of the specified stat and team/player for all the historic matches
+  for (match_link in historic_matches_links) {
+    # Use tryCatch to catch errors when extracting the match report
+    tryCatch({
+      match_stats <- fb_match_shooting(match_url = historic_matches_links)
+      shooting_logs <- bind_rows(shooting_logs, match_stats)
+    }, error = function(e) {
+      NULL # Do nothing if an error occurs
+    })
+    pb$tick() # For progress bar
+  }
+  
+  # Save the data into the RDA folder
+  save(shooting_logs, "rda/shooting_logs.rda")
+  
+  # Get the end time
+  end_time <- Sys.time()
+  
+  # Calculate the running time
+  running_time <- difftime(end_time, start_time, units = "secs")
+  
+  # Print the time data
+  print(paste("Start time: ", start_time))
+  print(paste("End time: ", end_time))
+  print(paste("Running time: ", round(running_time, 2), "secs", "(", round(running_time/60, 2), "mins)"))
+}
+
 
 
 
@@ -225,9 +266,9 @@ extract_szn_match_results <- function(szn){
 }
 
 
-# Function to extract the historic match logs of specified stats
+# Function to extract the current season's match logs of specified stats
 # Saved Data Path: 'rda/*.rda' (* = "historic_STAT_TEAM_PLAYER", depends on the input)
-extract_historic_stat_match_logs <- function(stat = NULL, team_player = NULL){
+extract_szn_stat_match_logs <- function(szn = NULL, stat = NULL, team_player = NULL){
   # Get the start time
   start_time <- Sys.time()
   
@@ -273,4 +314,48 @@ extract_historic_stat_match_logs <- function(stat = NULL, team_player = NULL){
 }
 
 
+# Function to extract the current season's shooting logs
+# Saved Data Path: 'rda/shooting_logs.rda'
+extract_szn_shooting_logs <- function(szn = NULL, stat = NULL, team_player = NULL){
+  # Get the start time
+  start_time <- Sys.time()
+  
+  # Run the function to get the current season's match links
+  curr_szn_matches_links <- extract_szn_match_links(szn)
+  
+  stats_data <- c()
+  
+  # Set progress bar
+  pb <- progress_bar$new(total = length(curr_szn_matches_links))
+  
+  # For loop to xtract the data of the specified stat and team/player for all the current season's matches
+  for (match_link in curr_szn_matches_links) {
+    # Use tryCatch to catch errors when extracting the match report
+    tryCatch({
+      match_stats <- fb_match_shooting(match_url = curr_szn_matches_links,
+                                             stat_type = stat,
+                                             team_or_player = team_player)
+      stats_data <- bind_rows(stats_data, match_stats)
+    }, error = function(e) {
+      NULL # Do nothing if an error occurs
+    })
+    pb$tick() # For progress bar
+  }
+  
+  # Get the end time
+  end_time <- Sys.time()
+  
+  # Calculate the running time
+  running_time <- difftime(end_time, start_time, units = "secs")
+  
+  # Print the time data
+  print(paste("Start time: ", start_time))
+  print(paste("End time: ", end_time))
+  print(paste("Running time: ", round(running_time, 2), "secs", "(", round(running_time/60, 2), "mins)"))
+  
+  # Return the stat match logs
+  return(stats_data)
+}
 
+
+#####
