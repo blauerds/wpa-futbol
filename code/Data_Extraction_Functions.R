@@ -15,7 +15,7 @@ extract_historic_match_links <- function(end_year = NULL){
   # Extract the match links
   historic_matches_links <- c(fb_match_urls(country = c("ITA", "ENG", "FRA", "SPA", "GER"),
                                             gender = "M",
-                                            season_end_year = c(2017:end_year),
+                                            season_end_year = c(2018:end_year),
                                             tier = '1st'), 
                               fb_match_urls(country = "ENG",
                                             gender = "M",
@@ -27,11 +27,11 @@ extract_historic_match_links <- function(end_year = NULL){
                                             tier = '1st'),
                               fb_match_urls(country = "",
                                             gender = "M",
-                                            season_end_year = c(2017:end_year),
+                                            season_end_year = c(2018:end_year),
                                             non_dom_league_url = ucl_link),
                               fb_match_urls(country = "",
                                             gender = "M",
-                                            season_end_year = c(2017:end_year),
+                                            season_end_year = c(2018:end_year),
                                             non_dom_league_url = uel_link)
   )
   
