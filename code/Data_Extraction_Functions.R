@@ -51,6 +51,7 @@ extract_historic_match_results <- function(end_year = NULL){
   uel_link <- "https://fbref.com/en/comps/19/history/Europa-League-Seasons"
   
   tryCatch({
+    capture.output({
   # Extract the match results
   historic_match_results <- bind_rows(fb_match_results(country = c("ITA", "ENG", "FRA", "SPA", "GER"),
                                             gender = "M",
@@ -71,8 +72,9 @@ extract_historic_match_results <- function(end_year = NULL){
                               fb_match_results(country = "",
                                             gender = "M",
                                             season_end_year = c(2017:end_year),
-                                            non_dom_league_url = uel_link)
-  ) }, error = function(e) {
+                                            non_dom_league_url = uel_link))
+    })
+  }, error = function(e) {
     NULL # Do nothing if an error occurs
   })
   
@@ -110,10 +112,12 @@ extract_historic_stat_match_logs <- function(stat = NULL, team_player = NULL){
   for (match_link in historic_matches_links) {
     # Use tryCatch to catch errors when extracting the data
     tryCatch({
+      capture.output({
     match_stats <- fb_advanced_match_stats(match_url = historic_matches_links,
                                            stat_type = stat,
                                            team_or_player = team_player)
     stats_data <- bind_rows(stats_data, match_stats)
+      })
     }, error = function(e) {
       NULL # Do nothing if an error occurs
     })
@@ -161,9 +165,11 @@ extract_historic_shooting_logs <- function(start_range = NULL, end_range = NULL)
   for (match_link in historic_matches_links) {
     # Use tryCatch to catch errors when extracting the data
     tryCatch({
+      capture.output({
       match_stats <- fb_match_shooting(match_url = historic_matches_links)
       match_stats <- match_stats %>% mutate('matchLink' = match_link)
       shooting_logs <- bind_rows(shooting_logs, match_stats)
+      })
     }, error = function(e) {
       NULL # Do nothing if an error occurs
     })
@@ -234,6 +240,7 @@ extract_szn_match_results <- function(szn){
   ucl_link <- "https://fbref.com/en/comps/8/history/Champions-League-Seasons"
   uel_link <- "https://fbref.com/en/comps/19/history/Europa-League-Seasons"
   
+  capture.output({
   # Extract the match results
   curr_szn_matches_results <- bind_rows(fb_match_results(country = c("ITA", "ENG", "FRA", "SPA", "GER"),
                                                        gender = "M",
@@ -255,7 +262,7 @@ extract_szn_match_results <- function(szn){
                                                        gender = "M",
                                                        season_end_year = szn,
                                                        non_dom_league_url = uel_link)
-  )
+  ) })
   
   # Get the end time
   end_time <- Sys.time()
@@ -291,10 +298,12 @@ extract_szn_stat_match_logs <- function(szn = NULL, stat = NULL, team_player = N
   for (match_link in curr_szn_matches_links) {
     # Use tryCatch to catch errors when extracting the data
     tryCatch({
+      capture.output({
       match_stats <- fb_advanced_match_stats(match_url = curr_szn_matches_links,
                                              stat_type = stat,
                                              team_or_player = team_player)
       stats_data <- bind_rows(stats_data, match_stats)
+      })
     }, error = function(e) {
       NULL # Do nothing if an error occurs
     })
@@ -339,9 +348,11 @@ extract_szn_shooting_logs <- function(szn = NULL){
   for (match_link in curr_szn_matches_links) {
     # Use tryCatch to catch errors when extracting the data
     tryCatch({
+      capture.output({
       match_stats <- fb_match_shooting(match_url = curr_szn_matches_links)
       match_stats <- match_stats %>% mutate(matchLink = match_link)
       stats_data <- bind_rows(stats_data, match_stats)
+      })
     }, error = function(e) {
       NULL # Do nothing if an error occurs
     })
