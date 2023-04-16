@@ -96,12 +96,15 @@ extract_historic_match_results <- function(end_year = NULL){
 
 # Function to extract the historic match logs of specified stats
 # Saved Data Path: 'rda/*.rda' (* = "historic_STAT_TEAM_PLAYER", depends on the input)
-extract_historic_stat_match_logs <- function(stat = NULL, team_player = NULL){
+extract_historic_stat_match_logs <- function(stat = NULL, team_player = NULL, start_range = NULL, end_range = NULL){
   # Get the start time
   start_time <- Sys.time()
   
   # Load the historic_matches_links
   load('rda/historic_matches_links.rda')
+  if (!is.null(start_range) & !is.null(end_range)) {
+    historic_matches_links <- historic_matches_links[start_range:end_range]
+  }
   
   stats_data <- c()
   
@@ -113,7 +116,7 @@ extract_historic_stat_match_logs <- function(stat = NULL, team_player = NULL){
     # Use tryCatch to catch errors when extracting the data
     tryCatch({
       capture.output({
-    match_stats <- fb_advanced_match_stats(match_url = historic_matches_links,
+    match_stats <- fb_advanced_match_stats(match_url = match_link,
                                            stat_type = stat,
                                            team_or_player = team_player)
     stats_data <- bind_rows(stats_data, match_stats)
@@ -166,7 +169,7 @@ extract_historic_shooting_logs <- function(start_range = NULL, end_range = NULL)
     # Use tryCatch to catch errors when extracting the data
     tryCatch({
       capture.output({
-      match_stats <- fb_match_shooting(match_url = historic_matches_links)
+      match_stats <- fb_match_shooting(match_url = match_link, time_pause = 5)
       match_stats <- match_stats %>% mutate('matchLink' = match_link)
       shooting_logs <- bind_rows(shooting_logs, match_stats)
       })
